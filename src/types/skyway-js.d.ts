@@ -1,13 +1,13 @@
 declare module 'skyway-js' {
     export default class Peer {
-      constructor(options?: any);
+      constructor(id?: string | null, options?: any);
       on(event: string, callback: (data?: any) => void): void;
       call(peerId: string, stream?: MediaStream, options?: any): MediaConnection;
       connect(peerId: string, options?: any): DataConnection;
     }
   
     export class MediaConnection {
-      answer(stream?: MediaStream): void;
+      answer(stream?: MediaStream | null): void;
       on(event: string, callback: (data?: any) => void): void;
       close(): void;
     }

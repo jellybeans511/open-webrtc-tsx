@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useStream } from '../StreamContext';
 
 const MediaStreamComponent: React.FC = () => {
+  const { localStream, setLocalStream } = useStream();
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string>('default');
   const [videoWidth, setVideoWidth] = useState<number>(1920);
   const [videoHeight, setVideoHeight] = useState<number>(1080);
   const [frameRate, setFrameRate] = useState<number>(30);
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [estimatedLatency, setEstimatedLatency] = useState<number | null>(null);
   
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -47,8 +48,8 @@ const MediaStreamComponent: React.FC = () => {
       }
 
       const videoTrack = mediaStream.getVideoTracks()[0];
-      const settings = videoTrack.getSettings();
-      setEstimatedLatency(settings.latency ?? null);
+      const videoSettings = videoTrack.getSettings();
+      setEstimatedLatency(videoSettings.latency ?? null);
     } catch (err) {
       console.error('Error accessing media devices.', err);
     }
@@ -59,7 +60,7 @@ const MediaStreamComponent: React.FC = () => {
   };
 
   const stopStream = () => {
-    localStream?.getTracks().forEach(track => track.stop());
+    localStream?.getTracks().forEach((track: MediaStreamTrack) => track.stop());
     setLocalStream(null);
   };
 
