@@ -11,7 +11,6 @@ const MediaStreamComponent: React.FC = () => {
   
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // メディアデバイスを列挙して選択肢をセットする
   useEffect(() => {
     const populateCameras = async () => {
       const mediaDevices = await navigator.mediaDevices.enumerateDevices();
@@ -21,7 +20,6 @@ const MediaStreamComponent: React.FC = () => {
 
     populateCameras();
 
-    // デバイスの変更を監視
     navigator.mediaDevices.addEventListener('devicechange', populateCameras);
 
     return () => {
@@ -29,7 +27,6 @@ const MediaStreamComponent: React.FC = () => {
     };
   }, []);
 
-  // カメラストリームを取得
   const getCameraStream = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -57,12 +54,10 @@ const MediaStreamComponent: React.FC = () => {
     }
   };
 
-  // デバイス選択時のハンドラ
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDeviceId(e.target.value);
   };
 
-  // ストリームを停止
   const stopStream = () => {
     localStream?.getTracks().forEach(track => track.stop());
     setLocalStream(null);
