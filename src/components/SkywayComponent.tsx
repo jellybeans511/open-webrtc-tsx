@@ -24,10 +24,18 @@ const SkywayComponent: React.FC = () => {
 
   // Peer作成
   const makePeer = () => {
-    console.log(inputId);
+    console.log(process.env); // APIキーが出力されるか確認
 
-    const newPeer = new (Peer as any)(inputId, {
-        key: '94d5c621-415d-4003-a1be-822df987831f',
+
+    const apiKey = "94d5c621-415d-4003-a1be-822df987831f";
+
+    if (!apiKey) {
+      console.error('API key is not defined');
+      return;
+    }
+
+    const newPeer = new Peer(inputId, {
+        key: apiKey,
         debug: 3
       });
 
