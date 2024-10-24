@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useStream } from '../StreamContext';
+import { useStream } from './StreamContext';
 
 const MediaStreamComponent: React.FC = () => {
   const { localStream, setLocalStream } = useStream();
@@ -67,6 +67,7 @@ const MediaStreamComponent: React.FC = () => {
   return (
     <div>
       <div className="local-stream">
+        <h2> Get your Stream</h2>
         <video ref={videoRef} width={480} height={320} playsInline></video>
         <p>Estimated camera latency: {estimatedLatency ? `${estimatedLatency} sec` : 'N/A'}</p>
         <form>
@@ -82,8 +83,8 @@ const MediaStreamComponent: React.FC = () => {
         <label>
           Select Device:
           <select onChange={handleDeviceChange} value={selectedDeviceId}>
-            <option value="default">(default camera)</option>
-            <option value="false">(no camera)</option>
+            <option value="default">(Default Camera)</option>
+            <option value="false">(None)</option>
             {devices.map(device => (
               <option key={device.deviceId} value={device.deviceId}>
                 {device.label || `Camera ${device.deviceId}`}

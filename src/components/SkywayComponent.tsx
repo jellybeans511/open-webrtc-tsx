@@ -1,19 +1,22 @@
 /// <reference path="../types/skyway-js.d.ts" />
 import { MediaConnection } from 'skyway-js';
 import React, { useState, useRef,useEffect } from 'react';
-import { useStream } from '../StreamContext';
+import { useStream } from './StreamContext';
 import Peer from 'skyway-js';
 
 const SkywayComponent: React.FC = () => {
+  console.log("SkywayComponent is trying to access useStream");
   const { localStream} = useStream();
-  const [localId, setLocalId] = useState<string>((''));  // 自分のPeer ID
-  const [inputId, setInputId] = useState<string>('');           // テキストボックスに入力されたID
-  const [remoteId, setRemoteId] = useState<string>('');         // リモートPeerのID
+  const [localId, setLocalId] = useState<string>((''));
+  const [inputId, setInputId] = useState<string>('');
+  const [remoteId, setRemoteId] = useState<string>('');
   const [peer, setPeer] = useState<Peer | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
+
+  const alphanumericPattern = /^[a-zA-Z0-9]+$/;
 
   useEffect(() => {
     if (localStream && localVideoRef.current) {
@@ -24,8 +27,13 @@ const SkywayComponent: React.FC = () => {
 
   // Peer作成
   const makePeer = () => {
-    console.log(process.env); // APIキーが出力されるか確認
+    console.log(process.env);
 
+    if (!alphanumericPattern.test(inputId)) {
+      console.error('Error: Peer ID must contain only alphanumeric characters.');
+      alert('Peer ID must contain only alphanumeric characters. Please confirm your Input ID.');
+      return;
+    }
 
     const apiKey = "94d5c621-415d-4003-a1be-822df987831f";
 
@@ -47,10 +55,10 @@ const SkywayComponent: React.FC = () => {
     // リモートの通話が開始された時の処理
     newPeer.on('call', (mediaConnection:MediaConnection) => {
         if (localStream) {
-            mediaConnection.answer(localStream); // 自分のストリームを送信
+            mediaConnection.answer(localStream);
           }
           else {
-            mediaConnection.answer(); // localStreamがない場合でも処理を進める
+            mediaConnection.answer();
           }
       mediaConnection.on('stream', (stream:MediaStream) => {
         setRemoteStream(stream);
@@ -69,13 +77,20 @@ const SkywayComponent: React.FC = () => {
 
   // 通話を発信
   const startCall = () => {
-    if (!peer || !remoteId) return;
-    if (!localStream) {
-        console.error('Local stream is not available');
+
+    if (!alphanumericPattern.test(remoteId)) {
+      console.error('Error: Remote Peer ID must contain only alphanumeric characters.');
+      alert('Remote Peer ID must contain only alphanumeric characters. Please confirm your Remote Peer ID.');
+      return;
+    }
+
+    if (!peer || !remoteId) {
+        console.error('Peer is not available');
         return;
     }
 
-    const mediaConnection = peer.call(remoteId, localStream);
+    const mediaConnection = peer.call(remoteId, localStream || undefined);
+    
     mediaConnection.on('stream', (stream:MediaStream) => {
       setRemoteStream(stream);
       if (remoteVideoRef.current) {
@@ -95,20 +110,19 @@ const SkywayComponent: React.FC = () => {
 
   return (
     <div>
-      <h1>Skyway P2P Communication</h1>
+      <h2>Skyway P2P Communication</h2>
       <div>
-        {/* 自分のPeer IDの入力欄 */}
-
       <div>
-        <p>Current ID: {localId || 'No peer'}</p>
         <video ref={remoteVideoRef} width="480" height="320" playsInline></video>
       </div>
-
+      <div>
+        <p>Current ID: {localId || 'No peer'}</p>
+      </div>
       <input
           type="text"
           placeholder="Kimi No Nawa"
           value={inputId}
-          onChange={(e) => setInputId(e.target.value)} // 入力したPeer IDを状態に保存
+          onChange={(e) => setInputId(e.target.value)}
         />
         <button onClick={makePeer}>Create Peer</button>
       </div>
@@ -118,7 +132,7 @@ const SkywayComponent: React.FC = () => {
           type="text"
           placeholder="Remote Peer ID"
           value={remoteId}
-          onChange={(e) => setRemoteId(e.target.value)} // リモートPeer IDを設定
+          onChange={(e) => setRemoteId(e.target.value)}
         />
         <button onClick={startCall}>Call</button>
         <button onClick={endCall}>End Call</button>

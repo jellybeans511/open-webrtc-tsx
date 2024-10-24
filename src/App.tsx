@@ -1,8 +1,8 @@
 // /src/App.tsx
 import React from 'react';
-import { StreamProvider } from './StreamContext';
+import { StreamProvider } from './components/StreamContext';
 import MediaStreamComponent from './components/MediaStreamComponent';
-import SkywayComponent from './components/SkywayComponent';
+import WebRTCComponentSelector from './components/WebRTCComponentSelector';
 
 const App: React.FC = () => {
   return (
@@ -10,7 +10,7 @@ const App: React.FC = () => {
       <h1>WebRTC Media Stream App</h1>
       <StreamProvider>
         <MediaStreamComponent />
-        <SkywayComponent />
+        <WebRTCComponentSelector />
       </StreamProvider>
     </div>
   );
