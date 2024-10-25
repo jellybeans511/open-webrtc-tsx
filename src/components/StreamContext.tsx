@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext } from 'react';
 
-// Contextを作成する
 const StreamContext = createContext<{
   localStream: MediaStream | null;
   setLocalStream: React.Dispatch<React.SetStateAction<MediaStream | null>>;

@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import { useStream } from './StreamContext'; // StreamContext からストリームを取得
+import { useStream } from './StreamContext';
 import Peer from 'skyway-js';
 
 const PureWebRTCComponent: React.FC = () => {
   console.log("PureWebRTCComponent is trying to access useStream");
-  const { localStream } = useStream(); // Context からストリームを取得
+  const { localStream } = useStream();
   const [remoteStream, setRemoteStream] = React.useState<MediaStream | null>(null);
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);

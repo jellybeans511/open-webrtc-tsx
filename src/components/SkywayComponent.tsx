@@ -5,7 +5,6 @@ import { useStream } from './StreamContext';
 import Peer from 'skyway-js';
 
 const SkywayComponent: React.FC = () => {
-  console.log("SkywayComponent is trying to access useStream");
   const { localStream} = useStream();
   const [localId, setLocalId] = useState<string>((''));
   const [inputId, setInputId] = useState<string>('');

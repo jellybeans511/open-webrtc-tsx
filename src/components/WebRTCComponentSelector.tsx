@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import PureWebRTCComponent from './PureWebRTCComponent';
 import SkywayComponent from './SkywayComponent';
-import { useStream } from './StreamContext';  // Streamを使っていることを確認
+import { useStream } from './StreamContext';
 
 const WebRTCComponentSelector: React.FC = () => {
-  const { localStream } = useStream();  // 確実にStreamがラップされているか確認
   const [selectedComponent, setSelectedComponent] = useState<'skyway' | 'pureWebRTC'>('skyway');
 
   return (
